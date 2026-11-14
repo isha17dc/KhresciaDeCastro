@@ -2,7 +2,7 @@
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { environment } from '../../environments/environment';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, onSnapshot, deleteDoc, updateDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 
 const app = initializeApp(environment.firebaseConfig);
 const db = getFirestore(app);
@@ -29,18 +29,21 @@ export class Tab2Page {
     this.loadMembers();
   }
 
+  ionViewDidEnter() {
+    this.loadMembers();
+  }
+
   loadMembers() {
-    const localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    let localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
     if (localData.length === 0) {
-      const defaultData = [
-        { id: '1', memberName: 'Daniel Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+      localData = [
+        { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
         { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
       ];
-      localStorage.setItem('club_members_data', JSON.stringify(defaultData));
-      this.members = defaultData;
-    } else {
-      this.members = localData;
+      localStorage.setItem('club_members_data', JSON.stringify(localData));
     }
+    this.members = localData;
+    (window as any)['club_members_global'] = localData;
   }
 
   get filteredMembers() {
@@ -48,7 +51,7 @@ export class Tab2Page {
       const matchesSearch =
         m.memberName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         m.studentId?.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesStatus = this.selectedStatus === 'All' || m.status === this.selectedStatus;
+      const matchesStatus = this.selectedStatus === 'All' || m.status?.toLowerCase() === this.selectedStatus.toLowerCase();
       return matchesSearch && matchesStatus;
     });
   }
@@ -64,6 +67,7 @@ export class Tab2Page {
     
     this.members = this.members.filter(m => m.id !== memberId);
     localStorage.setItem('club_members_data', JSON.stringify(this.members));
+    (window as any)['club_members_global'] = this.members;
 
     try {
       await deleteDoc(doc(db, 'members', memberId));
@@ -93,6 +97,7 @@ export class Tab2Page {
                 : m
             );
             localStorage.setItem('club_members_data', JSON.stringify(this.members));
+            (window as any)['club_members_global'] = this.members;
 
             try {
               const memberRef = doc(db, 'members', member.id);

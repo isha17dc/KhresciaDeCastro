@@ -24,7 +24,7 @@ export class Tab1Page {
       this.showToast('Please fill in all fields');
       return;
     }
-    const loading = await this.loadingCtrl.create({ message: 'Saving member...', duration: 500 });
+    const loading = await this.loadingCtrl.create({ message: 'Saving member...', duration: 400 });
     await loading.present();
 
     const newRecord = {
@@ -32,10 +32,16 @@ export class Tab1Page {
       ...this.newMember
     };
 
-    // Save to shared localStorage instantly so Tab 2 and Tab 3 read it accurately
-    const existing = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    let existing = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    if (existing.length === 0) {
+      existing = [
+        { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+        { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
+      ];
+    }
     existing.unshift(newRecord);
     localStorage.setItem('club_members_data', JSON.stringify(existing));
+    (window as any)['club_members_global'] = existing;
 
     try {
       await addDoc(membersCol, this.newMember);

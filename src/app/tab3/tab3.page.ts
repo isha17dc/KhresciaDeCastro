@@ -24,7 +24,7 @@ export class Tab3Page {
   }
 
   loadStats() {
-    let localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    let localData = (window as any)['club_members_global'] || JSON.parse(localStorage.getItem('club_members_data') || '[]');
     if (localData.length === 0) {
       localData = [
         { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
