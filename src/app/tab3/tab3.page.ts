@@ -1,4 +1,5 @@
 ﻿import { Component } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-tab3',
@@ -15,6 +16,8 @@ export class Tab3Page {
   financeCount: number = 0;
   eventsCount: number = 0;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ionViewWillEnter() {
     this.refreshStats();
   }
@@ -28,7 +31,6 @@ export class Tab3Page {
       const rawData = localStorage.getItem('club_members_data');
       let members = rawData ? JSON.parse(rawData) : [];
       
-      // Fallback kung sakaling blangko ang localStorage para may makita agad sa UI
       if (!Array.isArray(members) || members.length === 0) {
         members = [
           { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
@@ -44,6 +46,9 @@ export class Tab3Page {
       this.logisticsCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'logistics').length;
       this.financeCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'finance').length;
       this.eventsCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'events').length;
+
+      // Force UI refresh
+      this.cdr.detectChanges();
     } catch (e) {
       this.total = 0;
       this.activeCount = 0;
@@ -52,6 +57,7 @@ export class Tab3Page {
       this.logisticsCount = 0;
       this.financeCount = 0;
       this.eventsCount = 0;
+      this.cdr.detectChanges();
     }
   }
 }
