@@ -1,11 +1,4 @@
 ﻿import { Component } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
-
-const app = initializeApp(environment.firebaseConfig);
-const db = getFirestore(app);
-const membersCol = collection(db, 'members');
 
 @Component({
   selector: 'app-tab3',
@@ -21,15 +14,8 @@ export class Tab3Page {
   }
 
   loadStats() {
-    const localData = JSON.parse(localStorage.getItem('club_members') || '[]');
+    const localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
     this.members = localData;
-    try {
-      onSnapshot(membersCol, snapshot => {
-        if (!snapshot.empty) {
-          this.members = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
-      });
-    } catch {}
   }
 
   get totalMembers() {
@@ -37,14 +23,14 @@ export class Tab3Page {
   }
 
   get activeMembers() {
-    return this.members.filter(m => m.status === 'Active').length;
+    return this.members.filter(m => m.status === 'Active' || m.status === 'active').length;
   }
 
   get pendingMembers() {
-    return this.members.filter(m => m.status === 'Pending').length;
+    return this.members.filter(m => m.status === 'Pending' || m.status === 'pending').length;
   }
 
   countByCommittee(committee: string) {
-    return this.members.filter(m => m.committee === committee).length;
+    return this.members.filter(m => m.committee?.toLowerCase() === committee.toLowerCase()).length;
   }
 }

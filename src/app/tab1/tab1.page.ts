@@ -24,27 +24,25 @@ export class Tab1Page {
       this.showToast('Please fill in all fields');
       return;
     }
-    const loading = await this.loadingCtrl.create({ message: 'Saving member...', duration: 600 });
+    const loading = await this.loadingCtrl.create({ message: 'Saving member...', duration: 500 });
     await loading.present();
 
-    const record = {
-      id: Date.now().toString(),
+    const newRecord = {
+      id: 'id_' + Date.now(),
       ...this.newMember
     };
 
+    // Save to shared localStorage instantly so Tab 2 and Tab 3 read it accurately
+    const existing = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    existing.unshift(newRecord);
+    localStorage.setItem('club_members_data', JSON.stringify(existing));
+
     try {
-      await Promise.race([
-        addDoc(membersCol, this.newMember),
-        new Promise((_, reject) => setTimeout(() => reject('local-sync'), 350))
-      ]);
-    } catch {
-      const saved = JSON.parse(localStorage.getItem('club_members') || '[]');
-      saved.unshift(record);
-      localStorage.setItem('club_members', JSON.stringify(saved));
-    }
+      await addDoc(membersCol, this.newMember);
+    } catch {}
 
     await loading.dismiss();
-    this.showToast('Member added successfully');
+    this.showToast('Member added successfully!');
     this.newMember = { memberName: '', studentId: '', committee: 'Media', status: 'Active' };
   }
 
