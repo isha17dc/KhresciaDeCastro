@@ -7,7 +7,13 @@
   standalone: false
 })
 export class Tab3Page {
-  members: any[] = [];
+  total: number = 0;
+  activeCount: number = 0;
+  pendingCount: number = 0;
+  mediaCount: number = 0;
+  logisticsCount: number = 0;
+  financeCount: number = 0;
+  eventsCount: number = 0;
 
   ionViewWillEnter() {
     this.loadStats();
@@ -22,27 +28,17 @@ export class Tab3Page {
     if (localData.length === 0) {
       localData = [
         { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
-        { id: '2', memberName: 'Daniel Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
-        { id: '3', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
+        { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
       ];
       localStorage.setItem('club_members_data', JSON.stringify(localData));
     }
-    this.members = localData;
-  }
 
-  get totalMembers() {
-    return this.members.length;
-  }
-
-  get activeMembers() {
-    return this.members.filter(m => m.status?.toLowerCase() === 'active' || m.status === 'Active').length;
-  }
-
-  get pendingMembers() {
-    return this.members.filter(m => m.status?.toLowerCase() === 'pending' || m.status === 'Pending').length;
-  }
-
-  countByCommittee(committeeName: string) {
-    return this.members.filter(m => m.committee?.trim().toLowerCase() === committeeName.trim().toLowerCase()).length;
+    this.total = localData.length;
+    this.activeCount = localData.filter((m: any) => m.status?.toLowerCase() === 'active').length;
+    this.pendingCount = localData.filter((m: any) => m.status?.toLowerCase() === 'pending').length;
+    this.mediaCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'media').length;
+    this.logisticsCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'logistics').length;
+    this.financeCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'finance').length;
+    this.eventsCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'events').length;
   }
 }

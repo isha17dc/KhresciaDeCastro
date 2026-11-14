@@ -8,17 +8,17 @@
   <ion-card>
     <ion-card-header>
       <ion-card-subtitle>Membership Summary</ion-card-subtitle>
-      <ion-card-title>Total Registered: {{ totalMembers }}</ion-card-title>
+      <ion-card-title>Total Registered: {{ total }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list lines="none">
         <ion-item>
           <ion-label>Active Members</ion-label>
-          <ion-badge color="success" slot="end">{{ activeMembers }}</ion-badge>
+          <ion-badge color="success" slot="end">{{ activeCount }}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Pending Approval</ion-label>
-          <ion-badge color="warning" slot="end">{{ pendingMembers }}</ion-badge>
+          <ion-badge color="warning" slot="end">{{ pendingCount }}</ion-badge>
         </ion-item>
       </ion-list>
     </ion-card-content>
@@ -33,19 +33,19 @@
       <ion-list>
         <ion-item>
           <ion-label>Media Committee</ion-label>
-          <ion-badge color="primary" slot="end">{{ countByCommittee('Media') }}</ion-badge>
+          <ion-badge color="primary" slot="end">{{ mediaCount }}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Logistics Committee</ion-label>
-          <ion-badge color="secondary" slot="end">{{ countByCommittee('Logistics') }}</ion-badge>
+          <ion-badge color="secondary" slot="end">{{ logisticsCount }}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Finance Committee</ion-label>
-          <ion-badge color="tertiary" slot="end">{{ countByCommittee('Finance') }}</ion-badge>
+          <ion-badge color="tertiary" slot="end">{{ financeCount }}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Events Committee</ion-label>
-          <ion-badge color="medium" slot="end">{{ countByCommittee('Events') }}</ion-badge>
+          <ion-badge color="medium" slot="end">{{ eventsCount }}</ion-badge>
         </ion-item>
       </ion-list>
     </ion-card-content>
