@@ -34,7 +34,7 @@ jobs:
   deploy:
     needs: continuous-integration
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         run: docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud:latest
 
       - name: Verify app
-        shell: powershell
+        shell: pwsh
         run: |
           $success = $false
           for ($i = 1; $i -le 15; $i++) {
@@ -66,3 +66,4 @@ jobs:
             docker logs ionic-crud
             exit 1
           }
+
