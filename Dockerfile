@@ -2,7 +2,7 @@
 WORKDIR /app
 RUN npm install -g @ionic/cli
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 EXPOSE 8100
-CMD ["ionic", "serve", "--host=0.0.0.0", "--port=8100", "--no-open"]
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "8100", "--disable-host-check"]

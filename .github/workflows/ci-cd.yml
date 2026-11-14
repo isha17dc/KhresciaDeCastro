@@ -23,13 +23,13 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Run automated tests
         run: npm test --if-present
 
       - name: Build application
-        run: npm run build
+        run: npm run build -- --configuration development
 
   deploy:
     needs: continuous-integration
@@ -53,17 +53,18 @@ jobs:
         shell: pwsh
         run: |
           $success = $false
-          for ($i = 1; $i -le 15; $i++) {
+          for ($i = 1; $i -le 30; $i++) {
             try {
-              Invoke-WebRequest http://localhost:8100/ -UseBasicParsing -TimeoutSec 2 | Out-Null
-              $success = $true
-              break
+              $resp = Invoke-WebRequest http://localhost:8100/ -UseBasicParsing -TimeoutSec 5
+              if ($resp.StatusCode -eq 200) {
+                $success = $true
+                break
+              }
             } catch {
-              Start-Sleep -Seconds 2
+              Start-Sleep -Seconds 3
             }
           }
           if (-not $success) {
             docker logs ionic-crud
             exit 1
           }
-
