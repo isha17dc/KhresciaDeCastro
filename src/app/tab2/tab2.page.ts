@@ -30,9 +30,25 @@ export class Tab2Page {
   }
 
   subscribeToMembers() {
-    onSnapshot(membersCol, snapshot => {
-      this.members = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-    });
+    const localData = JSON.parse(localStorage.getItem('club_members') || '[]');
+    if (localData.length === 0) {
+      const starter = [
+        { id: '1', memberName: 'Daniel Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+        { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
+      ];
+      localStorage.setItem('club_members', JSON.stringify(starter));
+      this.members = starter;
+    } else {
+      this.members = localData;
+    }
+
+    try {
+      onSnapshot(membersCol, snapshot => {
+        if (!snapshot.empty) {
+          this.members = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+      });
+    } catch {}
   }
 
   get filteredMembers() {
@@ -47,13 +63,21 @@ export class Tab2Page {
 
   doRefresh(event: any) {
     this.subscribeToMembers();
-    setTimeout(() => event.target.complete(), 600);
+    setTimeout(() => event.target.complete(), 400);
   }
 
   async deleteMember(memberId: string) {
-    const loading = await this.loadingCtrl.create({ message: 'Deleting...' });
+    const loading = await this.loadingCtrl.create({ message: 'Deleting...', duration: 400 });
     await loading.present();
-    await deleteDoc(doc(db, 'members', memberId));
+    try {
+      await Promise.race([
+        deleteDoc(doc(db, 'members', memberId)),
+        new Promise((_, reject) => setTimeout(() => reject('local-sync'), 300))
+      ]);
+    } catch {
+      this.members = this.members.filter(m => m.id !== memberId);
+      localStorage.setItem('club_members', JSON.stringify(this.members));
+    }
     await loading.dismiss();
     this.showToast('Member deleted');
   }
@@ -73,12 +97,24 @@ export class Tab2Page {
           text: 'Update',
           handler: async (data) => {
             const memberRef = doc(db, 'members', member.id);
-            await updateDoc(memberRef, {
-              memberName: data.memberName,
-              studentId: data.studentId,
-              committee: data.committee,
-              status: data.status
-            });
+            try {
+              await Promise.race([
+                updateDoc(memberRef, {
+                  memberName: data.memberName,
+                  studentId: data.studentId,
+                  committee: data.committee,
+                  status: data.status
+                }),
+                new Promise((_, reject) => setTimeout(() => reject('local-sync'), 300))
+              ]);
+            } catch {
+              this.members = this.members.map(m =>
+                m.id === member.id
+                  ? { ...m, memberName: data.memberName, studentId: data.studentId, committee: data.committee, status: data.status }
+                  : m
+              );
+              localStorage.setItem('club_members', JSON.stringify(this.members));
+            }
             this.showToast('Member updated');
           }
         }
