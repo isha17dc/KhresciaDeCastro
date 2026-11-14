@@ -1,17 +1,65 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Club Overview & Stats</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Membership Summary</ion-card-subtitle>
+      <ion-card-title>Total Registered: {{ totalMembers }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-label>Active Members</ion-label>
+          <ion-badge color="success" slot="end">{{ activeMembers }}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Pending Approval</ion-label>
+          <ion-badge color="warning" slot="end">{{ pendingMembers }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Department Breakdown</ion-card-subtitle>
+      <ion-card-title>Committees</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Media Committee</ion-label>
+          <ion-badge color="primary" slot="end">{{ countByCommittee('Media') }}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Logistics Committee</ion-label>
+          <ion-badge color="secondary" slot="end">{{ countByCommittee('Logistics') }}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Finance Committee</ion-label>
+          <ion-badge color="tertiary" slot="end">{{ countByCommittee('Finance') }}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Events Committee</ion-label>
+          <ion-badge color="medium" slot="end">{{ countByCommittee('Events') }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>System Info</ion-card-subtitle>
+      <ion-card-title>About Application</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Project:</strong> Student Club Membership CRUD App (v2.0)</p>
+      <p><strong>Database:</strong> Firebase Firestore SDK v9+</p>
+      <p><strong>Deployment:</strong> Docker & GitHub Actions CI/CD</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
