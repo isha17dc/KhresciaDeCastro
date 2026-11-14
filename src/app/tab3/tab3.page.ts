@@ -16,29 +16,42 @@ export class Tab3Page {
   eventsCount: number = 0;
 
   ionViewWillEnter() {
-    this.loadStats();
+    this.refreshStats();
   }
 
   ionViewDidEnter() {
-    this.loadStats();
+    this.refreshStats();
   }
 
-  loadStats() {
-    let localData = (window as any)['club_members_global'] || JSON.parse(localStorage.getItem('club_members_data') || '[]');
-    if (localData.length === 0) {
-      localData = [
-        { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
-        { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
-      ];
-      localStorage.setItem('club_members_data', JSON.stringify(localData));
-    }
+  refreshStats() {
+    try {
+      const rawData = localStorage.getItem('club_members_data');
+      let members = rawData ? JSON.parse(rawData) : [];
+      
+      // Fallback kung sakaling blangko ang localStorage para may makita agad sa UI
+      if (!Array.isArray(members) || members.length === 0) {
+        members = [
+          { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+          { id: '2', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
+        ];
+        localStorage.setItem('club_members_data', JSON.stringify(members));
+      }
 
-    this.total = localData.length;
-    this.activeCount = localData.filter((m: any) => m.status?.toLowerCase() === 'active').length;
-    this.pendingCount = localData.filter((m: any) => m.status?.toLowerCase() === 'pending').length;
-    this.mediaCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'media').length;
-    this.logisticsCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'logistics').length;
-    this.financeCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'finance').length;
-    this.eventsCount = localData.filter((m: any) => m.committee?.trim().toLowerCase() === 'events').length;
+      this.total = members.length;
+      this.activeCount = members.filter((m: any) => m?.status?.toLowerCase() === 'active').length;
+      this.pendingCount = members.filter((m: any) => m?.status?.toLowerCase() === 'pending').length;
+      this.mediaCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'media').length;
+      this.logisticsCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'logistics').length;
+      this.financeCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'finance').length;
+      this.eventsCount = members.filter((m: any) => m?.committee?.trim().toLowerCase() === 'events').length;
+    } catch (e) {
+      this.total = 0;
+      this.activeCount = 0;
+      this.pendingCount = 0;
+      this.mediaCount = 0;
+      this.logisticsCount = 0;
+      this.financeCount = 0;
+      this.eventsCount = 0;
+    }
   }
 }
