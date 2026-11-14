@@ -1,4 +1,4 @@
-import { IonicModule } from '@ionic/angular/lazy';
+﻿import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,3 +18,4 @@ import { Tab3PageRoutingModule } from './tab3-routing.module';
   declarations: [Tab3Page]
 })
 export class Tab3PageModule {}
+

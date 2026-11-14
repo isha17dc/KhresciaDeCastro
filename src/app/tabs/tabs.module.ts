@@ -1,4 +1,4 @@
-import { IonicModule } from '@ionic/angular/lazy';
+﻿import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,3 +17,4 @@ import { TabsPage } from './tabs.page';
   declarations: [TabsPage]
 })
 export class TabsPageModule {}
+
