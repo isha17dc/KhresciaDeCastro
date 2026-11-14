@@ -13,6 +13,10 @@ export class Tab3Page {
     this.loadStats();
   }
 
+  ionViewDidEnter() {
+    this.loadStats();
+  }
+
   loadStats() {
     const localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
     this.members = localData;
@@ -23,11 +27,11 @@ export class Tab3Page {
   }
 
   get activeMembers() {
-    return this.members.filter(m => m.status === 'Active' || m.status === 'active').length;
+    return this.members.filter(m => m.status?.toLowerCase() === 'active').length;
   }
 
   get pendingMembers() {
-    return this.members.filter(m => m.status === 'Pending' || m.status === 'pending').length;
+    return this.members.filter(m => m.status?.toLowerCase() === 'pending').length;
   }
 
   countByCommittee(committee: string) {
