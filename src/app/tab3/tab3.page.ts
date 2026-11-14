@@ -18,7 +18,15 @@ export class Tab3Page {
   }
 
   loadStats() {
-    const localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    let localData = JSON.parse(localStorage.getItem('club_members_data') || '[]');
+    if (localData.length === 0) {
+      localData = [
+        { id: '1', memberName: 'Daniel S. Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+        { id: '2', memberName: 'Daniel Prudenciado', studentId: '2400703', committee: 'Media', status: 'Active' },
+        { id: '3', memberName: 'Khrescia De Castro', studentId: '2400812', committee: 'Events', status: 'Active' }
+      ];
+      localStorage.setItem('club_members_data', JSON.stringify(localData));
+    }
     this.members = localData;
   }
 
@@ -27,14 +35,14 @@ export class Tab3Page {
   }
 
   get activeMembers() {
-    return this.members.filter(m => m.status?.toLowerCase() === 'active').length;
+    return this.members.filter(m => m.status?.toLowerCase() === 'active' || m.status === 'Active').length;
   }
 
   get pendingMembers() {
-    return this.members.filter(m => m.status?.toLowerCase() === 'pending').length;
+    return this.members.filter(m => m.status?.toLowerCase() === 'pending' || m.status === 'Pending').length;
   }
 
-  countByCommittee(committee: string) {
-    return this.members.filter(m => m.committee?.toLowerCase() === committee.toLowerCase()).length;
+  countByCommittee(committeeName: string) {
+    return this.members.filter(m => m.committee?.trim().toLowerCase() === committeeName.trim().toLowerCase()).length;
   }
 }
