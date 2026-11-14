@@ -1,0 +1,40 @@
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Members Directory</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search by name or ID" [(ngModel)]="searchTerm"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedStatus">
+      <ion-segment-button value="All"><ion-label>All</ion-label></ion-segment-button>
+      <ion-segment-button value="Active"><ion-label>Active</ion-label></ion-segment-button>
+      <ion-segment-button value="Pending"><ion-label>Pending</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let member of filteredMembers">
+      <ion-item>
+        <ion-label>
+          <h2>{{ member.memberName }}</h2>
+          <p>ID: {{ member.studentId }} | {{ member.committee }} ({{ member.status }})</p>
+        </ion-label>
+        <ion-button size="small" fill="outline" (click)="updateMember(member)">Update</ion-button>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteMember(member.id)">Delete</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-text *ngIf="filteredMembers.length === 0" color="medium">
+    <p>No members found.</p>
+  </ion-text>
+</ion-content>

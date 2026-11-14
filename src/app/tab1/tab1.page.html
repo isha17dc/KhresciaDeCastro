@@ -1,0 +1,29 @@
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Club Member Registration v1.0</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-input label="Full Name" labelPlacement="stacked" placeholder="Enter member name" [(ngModel)]="newMember.memberName"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Student ID" labelPlacement="stacked" placeholder="e.g. 2023-00142" [(ngModel)]="newMember.studentId"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-select label="Committee" labelPlacement="stacked" [(ngModel)]="newMember.committee">
+      <ion-select-option value="Media">Media</ion-select-option>
+      <ion-select-option value="Logistics">Logistics</ion-select-option>
+      <ion-select-option value="Finance">Finance</ion-select-option>
+      <ion-select-option value="Events">Events</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-select label="Status" labelPlacement="stacked" [(ngModel)]="newMember.status">
+      <ion-select-option value="Active">Active</ion-select-option>
+      <ion-select-option value="Pending">Pending</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button expand="block" class="ion-margin-top" (click)="addMember()">Add Member</ion-button>
+</ion-content>
